@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J. Roberto Jesus · Ferramentas</title>
+<meta name="description" content="Documentos e Ferramentas de Cibersegurança - J. Roberto Jesus">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#06080d;
+--s1:#0b0f17;
+--s2:#111827;
+--s3:#1a2535;
+--accent:#00e5a0;
+--accent-dim:rgba(0,229,160,0.12);
+--accent-dim2:rgba(0,229,160,0.06);
+--blue:#3b9eff;
+--blue-dim:rgba(59,158,255,0.1);
+--text:#dce8f0;
+--muted:#4a5f72;
+--muted2:#7a9ab0;
+--border:rgba(0,229,160,0.1);
+--border2:rgba(255,255,255,0.05);
+--mono:'IBM Plex Mono',monospace;
+--display:'Bebas Neue',sans-serif;
+--body:'DM Sans',sans-serif;
+--r:8px;
+}
+html{scroll-behavior:smooth}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:var(--body);
+font-size:16px;
+line-height:1.65;
+overflow-x:hidden;
+}
+body::before{
+content:'';
+position:fixed;inset:0;
+background-image:
+linear-gradient(rgba(0,229,160,0.025) 1px,transparent 1px),
+linear-gradient(90deg,rgba(0,229,160,0.025) 1px,transparent 1px);
+background-size:60px 60px;
+pointer-events:none;
+z-index:0;
+}
+body::after{
+content:'';
+position:fixed;
+top:-200px;left:50%;transform:translateX(-50%);
+width:700px;height:400px;
+background:radial-gradient(ellipse,rgba(0,229,160,0.08) 0%,transparent 70%);
+pointer-events:none;
+z-index:0;
+}
+nav{
+position:fixed;top:0;left:0;right:0;
+z-index:200;
+display:flex;align-items:center;justify-content:space-between;
+padding:1.1rem 3rem;
+border-bottom:1px solid var(--border);
+backdrop-filter:blur(24px);
+background:rgba(6,8,13,0.82);
+}
+.nav-logo{
+font-family:var(--mono);
+font-size:12px;
+color:var(--accent);
+letter-spacing:0.15em;
+text-transform:uppercase;
+}
+.nav-links{
+display:flex;gap:2.5rem;list-style:none;
+}
+.nav-links a{
+font-family:var(--mono);
+font-size:11px;
+color:var(--muted2);
+text-decoration:none;
+letter-spacing:0.12em;
+text-transform:uppercase;
+transition:color .2s;
+}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a.active{color:var(--accent)}
+.nav-badge{
+display:flex;align-items:center;gap:7px;
+font-family:var(--mono);font-size:11px;color:var(--muted);
+}
+.pulse{
+width:6px;height:6px;border-radius:50%;
+background:var(--accent);
+animation:blink 2.2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+#hero{
+position:relative;z-index:1;
+min-height:100vh;
+display:flex;flex-direction:column;
+justify-content:center;
+padding:0 3rem;
+max-width:1200px;margin:0 auto;
+}
+.hero-tag{
+font-family:var(--mono);font-size:12px;
+color:var(--accent);letter-spacing:0.2em;
+text-transform:uppercase; margin-bottom:1.5rem;
+opacity:0;animation:fadeUp .6s .2s forwards;
+}
+.hero-name{
+font-family:var(--display);
+font-size:clamp(64px,9vw,130px);
+line-height:.95; letter-spacing:0.02em;
+color:var(--text);
+opacity:0;animation:fadeUp .7s .35s forwards;
+}
+.hero-name span{color:var(--accent)}
+.hero-sub{
+font-family:var(--body);
+font-size:clamp(16px,2vw,22px);
+color:var(--muted2); font-weight:300;
+margin-top:1.5rem; max-width:520px;
+opacity:0;animation:fadeUp .7s .5s forwards;
+}
+.hero-cta{
+display:flex;gap:14px;
+margin-top:3rem;
+opacity:0;animation:fadeUp .7s .8s forwards;
+}
+.btn{
+font-family:var(--mono);font-size:12px;
+padding:11px 24px;border-radius:var(--r);
+text-decoration:none;letter-spacing:0.1em;
+text-transform:uppercase; transition:all .2s;cursor:pointer;border:none;
+display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+background:var(--accent);color:#04100c;font-weight:500;
+}
+.btn-primary:hover{background:#00ffc0;box-shadow:0 0 30px rgba(0,229,160,0.3)}
+.btn-ghost{
+background:transparent;color:var(--muted2);
+border:1px solid var(--border2);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.scroll-hint{
+position:absolute;bottom:2.5rem;left:3rem;
+font-family:var(--mono);font-size:11px;color:var(--muted);
+display:flex;align-items:center;gap:10px;
+opacity:0;animation:fadeUp .6s 1.2s forwards;
+}
+.scroll-line{
+width:40px;height:1px;background:var(--muted);
+position:relative;overflow:hidden;
+}
+.scroll-line::after{
+content:'';position:absolute;top:0;left:-100%;
+width:100%;height:100%;background:var(--accent);
+animation:slide 2s 1.5s ease-in-out infinite;
+}
+@keyframes slide{0%{left:-100%}100%{left:100%}}
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+section{
+position:relative;z-index:1;
+max-width:1200px;margin:0 auto;
+padding:7rem 3rem;
+}
+.sec-label{
+font-family:var(--mono);font-size:11px;
+color:var(--accent);letter-spacing:0.25em;
+text-transform:uppercase;margin-bottom:1rem;
+}
+.sec-title{
+font-family:var(--display);
+font-size:clamp(36px,5vw,64px);
+line-height:1;letter-spacing:0.03em;
+color:var(--text);margin-bottom:2rem;
+}
+.sec-divider{
+width:100%;height:1px;
+background:linear-gradient(90deg,var(--border),transparent);
+margin-bottom:4rem;
+}
+.tools-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+gap:1.5rem;
+}
+.tool-card{
+border:1px solid var(--border2);
+border-radius:12px;
+padding:2rem;
+background:var(--s1);
+transition:all .25s;
+position:relative;overflow:hidden;
+}
+.tool-card::before{
+content:'';position:absolute;
+top:0;left:0;right:0;height:2px;
+background:linear-gradient(90deg,var(--accent),transparent);
+opacity:0;transition:opacity .25s;
+}
+.tool-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.tool-card:hover::before{opacity:1}
+.tool-icon{
+width:44px;height:44px;border-radius:10px;
+background:var(--accent-dim);
+display:flex;align-items:center;justify-content:center;
+font-size:22px;margin-bottom:1rem;
+}
+.tool-name{
+font-family:var(--display);font-size:28px;
+letter-spacing:0.03em;color:var(--text);
+margin-bottom:.4rem;line-height:1;
+}
+.tool-desc{
+font-size:14px;color:var(--muted2);
+font-weight:300;line-height:1.6;
+margin-bottom:1.4rem;
+}
+.tool-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tool-tag{
+font-family:var(--mono);font-size:10px;
+color:var(--muted);letter-spacing:0.08em;
+border:1px solid var(--border2);
+padding:3px 10px;border-radius:100px;
+text-transform:uppercase;
+}
+.tool-link{
+display:inline-flex;align-items:center;gap:6px;
+font-family:var(--mono);font-size:11px;
+color:var(--accent);text-decoration:none;
+margin-top:1.4rem;letter-spacing:0.08em;
+transition:gap .2s;
+}
+.tool-link:hover{gap:10px}
+.content-note{
+font-family:var(--mono);font-size:11px;
+color:var(--muted);letter-spacing:0.08em;
+margin-top:1rem;
+}
+footer{
+position:relative;z-index:1;
+border-top:1px solid var(--border2);
+padding:2rem 3rem;
+max-width:100%;
+display:flex;align-items:center;justify-content:space-between;
+}
+.footer-copy{
+font-family:var(--mono);font-size:11px;
+color:var(--muted);letter-spacing:0.08em;
+}
+.footer-tag{
+font-family:var(--mono);font-size:11px;
+color:var(--accent);letter-spacing:0.08em;
+}
+@media(max-width:768px){
+nav{padding:1rem 1.5rem}
+.nav-links{display:none}
+#hero,section{padding-left:1.5rem;padding-right:1.5rem}
+.tools-grid{grid-template-columns:1fr}
+footer{flex-direction:column;gap:10px;text-align:center;padding:1.5rem}
+}
+.reveal{
+opacity:0;transform:translateY(28px);
+transition:opacity .7s ease,transform .7s ease;
+}
+.revealed{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-logo">jrjesus://cyber</div>
+<ul class="nav-links">
+<li><a href="index.html">Sobre</a></li>
+<li><a href="index.html#videos">Conteúdo</a></li>
+<li><a href="ferramentas.html" class="active">Ferramentas</a></li>
+<li><a href="index.html#grc">GRC</a></li>
+<li><a href="index.html#contato">Contato</a></li>
+</ul>
+<div class="nav-badge"><span class="pulse"></span>disponível</div>
+</nav>
+
+<section id="hero">
+<div class="hero-tag">// Ferramentas & Documentos</div>
+<h1 class="hero-name">Ferramentas<br><span>de Cibersegurança</span></h1>
+<p class="hero-sub">Documentos, templates e ferramentas práticas para profissionais de segurança da informação, GRC e conformidade.</p>
+<div class="hero-cta">
+<a href="#documentos" class="btn btn-primary">📄 Documentos</a>
+<a href="#ferramentas" class="btn btn-ghost">🛠️ Ferramentas</a>
+</div>
+<div class="scroll-hint">
+<span>scroll</span>
+<div class="scroll-line"></div>
+</div>
+</section>
+
+<section id="documentos">
+<div class="sec-label">// 01 — documentos</div>
+<h2 class="sec-title">Documentos</h2>
+<div class="sec-divider"></div>
+<div class="content-note">
+// Adicione aqui seus documentos: templates de políticas, planilhas, checklists, modelos de relatórios, etc.
+</div>
+</section>
+
+<section id="ferramentas">
+<div class="sec-label">// 02 — ferramentas</div>
+<h2 class="sec-title">Ferramentas</h2>
+<div class="sec-divider"></div>
+<div class="content-note">
+// Adicione aqui suas ferramentas: GRC Manager, Vuln Scanner, Policy Gen, Asset Map, etc.
+</div>
+</section>
+
+<footer>
+<div class="footer-copy">© 2025 J. Roberto Jesus · Todos os direitos reservados</div>
+<div class="footer-tag">segurança · educação · inovação</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+entries.forEach(e => {
+if(e.isIntersecting){
+e.target.classList.add('revealed');
+observer.unobserve(e.target)
+}
+})
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'})
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+</script>
+
+</body>
+</html>
