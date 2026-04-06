@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J. Roberto Jesus · Cybersecurity</title>
+<meta name="description" content="Profissional de Cibersegurança · GRC · Ferramentas · Canal Café com Segurança">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#06080d;
+  --s1:#0b0f17;
+  --s2:#111827;
+  --s3:#1a2535;
+  --accent:#00e5a0;
+  --accent-dim:rgba(0,229,160,0.12);
+  --accent-dim2:rgba(0,229,160,0.06);
+  --blue:#3b9eff;
+  --blue-dim:rgba(59,158,255,0.1);
+  --text:#dce8f0;
+  --muted:#4a5f72;
+  --muted2:#7a9ab0;
+  --border:rgba(0,229,160,0.1);
+  --border2:rgba(255,255,255,0.05);
+  --mono:'IBM Plex Mono',monospace;
+  --display:'Bebas Neue',sans-serif;
+  --body:'DM Sans',sans-serif;
+  --r:8px;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+/* Grid background */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,160,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Glow top */
+body::after{
+  content:'';
+  position:fixed;
+  top:-200px;left:50%;transform:translateX(-50%);
+  width:700px;height:400px;
+  background:radial-gradient(ellipse,rgba(0,229,160,0.08) 0%,transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 3rem;
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(24px);
+  background:rgba(6,8,13,0.82);
+}
+
+.nav-logo{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;gap:2.5rem;list-style:none;
+}
+
+.nav-links a{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--muted2);
+  text-decoration:none;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--accent)}
+
+.nav-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+}
+.pulse{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:blink 2.2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ─── HERO ─── */
+#hero{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:0 3rem;
+  max-width:1200px;margin:0 auto;
+}
+
+.hero-tag{
+  font-family:var(--mono);font-size:12px;
+  color:var(--accent);letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp .6s .2s forwards;
+}
+
+.hero-name{
+  font-family:var(--display);
+  font-size:clamp(64px,9vw,130px);
+  line-height:.95;
+  letter-spacing:0.02em;
+  color:var(--text);
+  opacity:0;animation:fadeUp .7s .35s forwards;
+}
+.hero-name span{color:var(--accent)}
+
+.hero-sub{
+  font-family:var(--body);
+  font-size:clamp(16px,2vw,22px);
+  color:var(--muted2);
+  font-weight:300;
+  margin-top:1.5rem;
+  max-width:520px;
+  opacity:0;animation:fadeUp .7s .5s forwards;
+}
+
+.hero-pills{
+  display:flex;flex-wrap:wrap;gap:10px;
+  margin-top:2.5rem;
+  opacity:0;animation:fadeUp .7s .65s forwards;
+}
+
+.pill{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted2);letter-spacing:0.1em;
+  border:1px solid var(--border2);
+  padding:5px 14px;border-radius:100px;
+  background:var(--s2);
+  text-transform:uppercase;
+}
+
+.hero-cta{
+  display:flex;gap:14px;
+  margin-top:3rem;
+  opacity:0;animation:fadeUp .7s .8s forwards;
+}
+
+.btn{
+  font-family:var(--mono);font-size:12px;
+  padding:11px 24px;border-radius:var(--r);
+  text-decoration:none;letter-spacing:0.1em;
+  text-transform:uppercase;
+  transition:all .2s;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+  background:var(--accent);color:#04100c;font-weight:500;
+}
+.btn-primary:hover{background:#00ffc0;box-shadow:0 0 30px rgba(0,229,160,0.3)}
+.btn-ghost{
+  background:transparent;color:var(--muted2);
+  border:1px solid var(--border2);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:3rem;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  display:flex;align-items:center;gap:10px;
+  opacity:0;animation:fadeUp .6s 1.2s forwards;
+}
+.scroll-line{
+  width:40px;height:1px;background:var(--muted);
+  position:relative;overflow:hidden;
+}
+.scroll-line::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;background:var(--accent);
+  animation:slide 2s 1.5s ease-in-out infinite;
+}
+@keyframes slide{0%{left:-100%}100%{left:100%}}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── SECTIONS SHARED ─── */
+section{
+  position:relative;z-index:1;
+  max-width:1200px;margin:0 auto;
+  padding:7rem 3rem;
+}
+
+.sec-label{
+  font-family:var(--mono);font-size:11px;
+  color:var(--accent);letter-spacing:0.25em;
+  text-transform:uppercase;margin-bottom:1rem;
+}
+
+.sec-title{
+  font-family:var(--display);
+  font-size:clamp(36px,5vw,64px);
+  line-height:1;letter-spacing:0.03em;
+  color:var(--text);margin-bottom:2rem;
+}
+
+.sec-divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,var(--border),transparent);
+  margin-bottom:4rem;
+}
+
+/* ─── SOBRE ─── */
+#sobre .grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:start;
+}
+#sobre p{
+  color:var(--muted2);font-weight:300;
+  font-size:17px;line-height:1.8;
+  margin-bottom:1.2rem;
+}
+#sobre p strong{color:var(--text);font-weight:500}
+
+.stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;background:var(--border);
+}
+.stat{
+  background:var(--s1);
+  padding:1.75rem;text-align:center;
+}
+.stat-num{
+  font-family:var(--display);
+  font-size:48px;line-height:1;
+  color:var(--accent);letter-spacing:0.02em;
+}
+.stat-label{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:0.12em;
+  text-transform:uppercase;margin-top:6px;
+}
+
+.links-social{
+  margin-top:2rem;display:flex;flex-direction:column;gap:10px;
+}
+.social-link{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:12px;
+  color:var(--muted2);text-decoration:none;
+  padding:12px 16px;border-radius:var(--r);
+  border:1px solid var(--border2);
+  background:var(--s1);
+  transition:all .2s;letter-spacing:0.08em;
+}
+.social-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim2)}
+.social-icon{font-size:16px}
+
+/* ─── VÍDEOS ─── */
+#videos{background:transparent}
+
+.videos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:1.5rem;
+}
+
+.video-card{
+  border:1px solid var(--border2);
+  border-radius:12px;
+  overflow:hidden;
+  background:var(--s1);
+  transition:all .25s;
+  cursor:pointer;
+}
+.video-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(0,0,0,0.4);
+}
+
+.video-thumb{
+  position:relative;width:100%;padding-top:56.25%;
+  background:var(--s2);overflow:hidden;
+}
+.video-thumb img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;transition:transform .3s;
+}
+.video-card:hover .video-thumb img{transform:scale(1.04)}
+
+.video-play{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.35);
+  opacity:0;transition:opacity .2s;
+}
+.video-card:hover .video-play{opacity:1}
+.play-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+}
+.play-icon svg{margin-left:3px}
+
+.video-info{padding:1.2rem 1.4rem 1.4rem}
+.video-tag{
+  font-family:var(--mono);font-size:10px;
+  color:var(--accent);letter-spacing:0.15em;
+  text-transform:uppercase;margin-bottom:7px;
+}
+.video-title{
+  font-size:15px;font-weight:500;
+  color:var(--text);line-height:1.4;
+  margin-bottom:6px;
+}
+.video-meta{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+}
+
+.channel-cta{
+  text-align:center;margin-top:3rem;
+}
+
+/* ─── FERRAMENTAS ─── */
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:1.5rem;
+}
+
+.tool-card{
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:2rem;
+  background:var(--s1);
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.tool-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.tool-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.tool-card:hover::before{opacity:1}
+
+.tool-header{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;margin-bottom:1rem;
+}
+.tool-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+}
+.tool-status{
+  font-family:var(--mono);font-size:10px;
+  padding:3px 10px;border-radius:100px;
+  letter-spacing:0.1em;text-transform:uppercase;
+}
+.status-live{background:rgba(0,229,160,.12);color:var(--accent)}
+.status-dev{background:rgba(59,158,255,.12);color:var(--blue)}
+.status-soon{background:rgba(255,255,255,.05);color:var(--muted2)}
+
+.tool-name{
+  font-family:var(--display);font-size:28px;
+  letter-spacing:0.03em;color:var(--text);
+  margin-bottom:.4rem;line-height:1;
+}
+.tool-desc{
+  font-size:14px;color:var(--muted2);
+  font-weight:300;line-height:1.6;
+  margin-bottom:1.4rem;
+}
+.tool-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tool-tag{
+  font-family:var(--mono);font-size:10px;
+  color:var(--muted);letter-spacing:0.08em;
+  border:1px solid var(--border2);
+  padding:3px 10px;border-radius:100px;
+  text-transform:uppercase;
+}
+.tool-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:11px;
+  color:var(--accent);text-decoration:none;
+  margin-top:1.4rem;letter-spacing:0.08em;
+  transition:gap .2s;
+}
+.tool-link:hover{gap:10px}
+
+/* ─── GRC ─── */
+#grc{
+  padding-top:0;
+}
+
+.grc-banner{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:3rem;
+  background:linear-gradient(135deg,var(--s1),var(--s2));
+  position:relative;overflow:hidden;
+  margin-bottom:3rem;
+}
+.grc-banner::after{
+  content:'GRC';
+  position:absolute;right:-20px;bottom:-40px;
+  font-family:var(--display);font-size:160px;
+  color:rgba(0,229,160,0.04);line-height:1;
+  pointer-events:none;letter-spacing:0;
+}
+.grc-banner p{
+  font-size:17px;color:var(--muted2);
+  font-weight:300;max-width:600px;
+  line-height:1.8;
+}
+
+.grc-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  background:var(--border);
+}
+.grc-item{
+  background:var(--s1);
+  padding:2rem;
+}
+.grc-item-icon{
+  font-size:28px;margin-bottom:1rem;
+}
+.grc-item-title{
+  font-family:var(--display);font-size:22px;
+  letter-spacing:0.03em;color:var(--text);
+  margin-bottom:.5rem;
+}
+.grc-item-desc{
+  font-size:13px;color:var(--muted);
+  font-weight:300;line-height:1.6;
+}
+
+/* ─── CONTATO ─── */
+#contato{
+  padding-bottom:6rem;
+}
+.contact-box{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:4rem;
+  background:var(--s1);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+  position:relative;overflow:hidden;
+}
+.contact-box::before{
+  content:'';
+  position:absolute;right:-100px;top:-100px;
+  width:350px;height:350px;
+  background:radial-gradient(circle,rgba(0,229,160,0.06),transparent 70%);
+  pointer-events:none;
+}
+.contact-headline{
+  font-family:var(--display);
+  font-size:clamp(36px,4vw,56px);
+  line-height:.95;letter-spacing:0.03em;
+  color:var(--text);margin-bottom:1.2rem;
+}
+.contact-headline span{color:var(--accent)}
+.contact-sub{
+  font-size:15px;color:var(--muted2);
+  font-weight:300;line-height:1.7;
+}
+.contact-links{
+  display:flex;flex-direction:column;gap:12px;
+}
+.contact-item{
+  display:flex;align-items:center;gap:14px;
+  padding:1.1rem 1.4rem;
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  background:var(--s2);
+  text-decoration:none;
+  transition:all .2s;
+}
+.contact-item:hover{border-color:var(--accent);background:var(--accent-dim2)}
+.contact-item-icon{
+  width:36px;height:36px;
+  border-radius:8px;
+  background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+}
+.contact-item-text{}
+.contact-item-label{
+  font-family:var(--mono);font-size:10px;
+  color:var(--muted);letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+.contact-item-value{
+  font-size:14px;color:var(--text);font-weight:400;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border2);
+  padding:2rem 3rem;
+  max-width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-copy{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:0.08em;
+}
+.footer-tag{
+  font-family:var(--mono);font-size:11px;
+  color:var(--accent);letter-spacing:0.08em;
+}
+
+/* ─── MOBILE ─── */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  #hero,section{padding-left:1.5rem;padding-right:1.5rem}
+  #sobre .grid{grid-template-columns:1fr}
+  .grc-grid{grid-template-columns:1fr}
+  .contact-box{grid-template-columns:1fr;padding:2rem}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:1.5rem}
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.revealed{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">jrjesus://cyber</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#videos">Conteúdo</a></li>
+    <li><a href="#ferramentas">Ferramentas</a></li>
+    <li><a href="#grc">GRC</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="nav-badge">
+    <span class="pulse"></span>
+    disponível
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <p class="hero-tag">// Profissional de Cibersegurança</p>
+  <h1 class="hero-name">J. Roberto<br><span>Jesus</span></h1>
+  <p class="hero-sub">Segurança da informação, GRC, desenvolvimento de ferramentas e educação em segurança para o mercado brasileiro.</p>
+  <div class="hero-pills">
+    <span class="pill">Pentest</span>
+    <span class="pill">GRC</span>
+    <span class="pill">ISO 27001</span>
+    <span class="pill">LGPD</span>
+    <span class="pill">SOC</span>
+    <span class="pill">Threat Intel</span>
+    <span class="pill">Blue Team</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#ferramentas" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Ver ferramentas
+    </a>
+    <a href="https://www.youtube.com/@Caf%C3%A9comSeguran%C3%A7a_Oficial" target="_blank" class="btn btn-ghost">
+      ▶ Canal no YouTube
+    </a>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    scroll
+  </div>
+</div>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <p class="sec-label reveal">// 01 — sobre</p>
+  <h2 class="sec-title reveal">Quem sou</h2>
+  <div class="sec-divider reveal"></div>
+  <div class="grid">
+    <div class="reveal">
+      <p>Atuo na área de <strong>Cibersegurança</strong> com foco em proteção de ambientes corporativos, conformidade regulatória e desenvolvimento de soluções práticas para os desafios reais do mercado.</p>
+      <p>Criador do canal <strong>Café com Segurança</strong>, onde compartilho conhecimento técnico de forma direta e acessível para profissionais e entusiastas da área no Brasil.</p>
+      <p>Acredito que segurança eficiente combina <strong>tecnologia, processos e pessoas</strong> — e que boas ferramentas fazem toda a diferença no dia a dia do profissional.</p>
+      <div class="links-social">
+        <a href="https://www.linkedin.com/in/jrobertojesus-cyber/" target="_blank" class="social-link">
+          <span class="social-icon">💼</span>
+          linkedin.com/in/jrobertojesus-cyber
+        </a>
+        <a href="https://www.youtube.com/@Caf%C3%A9comSeguran%C3%A7a_Oficial" target="_blank" class="social-link">
+          <span class="social-icon">▶</span>
+          YouTube · Café com Segurança
+        </a>
+        <a href="https://github.com/" target="_blank" class="social-link" id="github-link">
+          <span class="social-icon">⌥</span>
+          GitHub · jrobertojesus
+        </a>
+      </div>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat">
+        <div class="stat-num" id="cnt-anos">5+</div>
+        <div class="stat-label">Anos em Cyber</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="cnt-tools">8+</div>
+        <div class="stat-label">Ferramentas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="cnt-videos">50+</div>
+        <div class="stat-label">Vídeos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">BR</div>
+        <div class="stat-label">Base · São Paulo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VÍDEOS -->
+<section id="videos">
+  <p class="sec-label reveal">// 02 — conteúdo</p>
+  <h2 class="sec-title reveal">Café com Segurança</h2>
+  <div class="sec-divider reveal"></div>
+  <div class="videos-grid" id="videos-grid">
+    <!-- Cards gerados pelo JS -->
+  </div>
+  <div class="channel-cta reveal" style="margin-top:3rem">
+    <a href="https://www.youtube.com/@Caf%C3%A9comSeguran%C3%A7a_Oficial" target="_blank" class="btn btn-ghost" style="margin:0 auto">
+      ▶&nbsp;&nbsp;Ver todos os vídeos no canal
+    </a>
+  </div>
+</section>
+
+<!-- FERRAMENTAS -->
+<section id="ferramentas">
+  <p class="sec-label reveal">// 03 — ferramentas</p>
+  <h2 class="sec-title reveal">Stack de Ferramentas</h2>
+  <div class="sec-divider reveal"></div>
+  <div class="tools-grid">
+
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-icon">🛡️</div>
+        <span class="tool-status status-live">Live</span>
+      </div>
+      <div class="tool-name">GRC Manager</div>
+      <div class="tool-desc">Plataforma para gestão de riscos, controles e conformidade regulatória. Mapeamento de ativos, tratamento de riscos e relatórios automatizados.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">ISO 27001</span>
+        <span class="tool-tag">LGPD</span>
+        <span class="tool-tag">SOC2</span>
+        <span class="tool-tag">Risk</span>
+      </div>
+      <a href="#" class="tool-link">Acessar ferramenta →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-icon">🔍</div>
+        <span class="tool-status status-live">Live</span>
+      </div>
+      <div class="tool-name">Vuln Scanner</div>
+      <div class="tool-desc">Scanner de vulnerabilidades leve para ambientes corporativos. Relatórios em português com priorização por criticidade e impacto no negócio.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">CVE</span>
+        <span class="tool-tag">CVSS</span>
+        <span class="tool-tag">Network</span>
+        <span class="tool-tag">Web</span>
+      </div>
+      <a href="#" class="tool-link">Acessar ferramenta →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-icon">📋</div>
+        <span class="tool-status status-dev">Em dev</span>
+      </div>
+      <div class="tool-name">Policy Gen</div>
+      <div class="tool-desc">Gerador inteligente de políticas de segurança. Templates customizáveis para PSI, PCS, política de acesso e classificação da informação.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">Políticas</span>
+        <span class="tool-tag">Templates</span>
+        <span class="tool-tag">IA</span>
+      </div>
+      <a href="#" class="tool-link" style="opacity:.5;pointer-events:none">Em breve →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-icon">🧩</div>
+        <span class="tool-status status-dev">Em dev</span>
+      </div>
+      <div class="tool-name">Asset Map</div>
+      <div class="tool-desc">Mapeamento e inventário de ativos de informação com classificação automática, proprietários e fluxo de dados por criticidade.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">Inventário</span>
+        <span class="tool-tag">CMDB</span>
+        <span class="tool-tag">Classificação</span>
+      </div>
+      <a href="#" class="tool-link" style="opacity:.5;pointer-events:none">Em breve →</a>
+    </div>
+
+    <div class="tool-card reveal" style="border-style:dashed;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px">
+      <div style="font-size:32px;margin-bottom:1rem;opacity:.3">+</div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase">
+        Nova ferramenta<br>em desenvolvimento
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GRC -->
+<section id="grc">
+  <p class="sec-label reveal">// 04 — grc</p>
+  <h2 class="sec-title reveal">Governança, Risco<br>& Conformidade</h2>
+  <div class="sec-divider reveal"></div>
+
+  <div class="grc-banner reveal">
+    <p>Especialização em frameworks internacionais de segurança da informação, adequação à LGPD e construção de programas de segurança alinhados ao negócio — do diagnóstico ao plano de ação.</p>
+  </div>
+
+  <div class="grc-grid reveal">
+    <div class="grc-item">
+      <div class="grc-item-icon">🏛️</div>
+      <div class="grc-item-title">Governança</div>
+      <div class="grc-item-desc">Estruturação de comitês, políticas, procedimentos e indicadores de segurança alinhados à estratégia corporativa.</div>
+    </div>
+    <div class="grc-item">
+      <div class="grc-item-icon">⚠️</div>
+      <div class="grc-item-title">Gestão de Risco</div>
+      <div class="grc-item-desc">Identificação, análise, avaliação e tratamento de riscos de segurança da informação com base nas metodologias ISO 31000 e NIST.</div>
+    </div>
+    <div class="grc-item">
+      <div class="grc-item-icon">✅</div>
+      <div class="grc-item-title">Conformidade</div>
+      <div class="grc-item-desc">Adequação às normas ISO 27001, LGPD, SOC 2 e outros frameworks regulatórios. Gap analysis e plano de adequação.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <p class="sec-label reveal">// 05 — contato</p>
+  <div class="contact-box reveal">
+    <div>
+      <h2 class="contact-headline">Vamos<br><span>conversar</span></h2>
+      <p class="contact-sub">Aberto para projetos de consultoria, parcerias e colaborações na área de cibersegurança.</p>
+    </div>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/jrobertojesus-cyber/" target="_blank" class="contact-item">
+        <div class="contact-item-icon">💼</div>
+        <div class="contact-item-text">
+          <div class="contact-item-label">LinkedIn</div>
+          <div class="contact-item-value">jrobertojesus-cyber</div>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@Caf%C3%A9comSeguran%C3%A7a_Oficial" target="_blank" class="contact-item">
+        <div class="contact-item-icon">▶</div>
+        <div class="contact-item-text">
+          <div class="contact-item-label">YouTube</div>
+          <div class="contact-item-value">Café com Segurança</div>
+        </div>
+      </a>
+      <a href="mailto:contato@jrobertojesus.com" class="contact-item">
+        <div class="contact-item-icon">✉</div>
+        <div class="contact-item-text">
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-value">contato@jrobertojesus.com</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 J. Roberto Jesus · Todos os direitos reservados</span>
+  <span class="footer-tag">segurança · educação · inovação</span>
+</footer>
+
+<script>
+// ── Scroll reveal ──────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('revealed'); observer.unobserve(e.target) }
+  })
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'})
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+// ── Vídeos do canal (configuráveis) ────────────
+// Para atualizar: troque os IDs do YouTube e títulos abaixo
+const videos = [
+  {
+    id:'dQw4w9WgXcQ', // ← substitua pelo ID real do vídeo
+    titulo:'Como implementar ISO 27001 na prática',
+    tag:'GRC · Certificação',
+    data:'Jun 2025'
+  },
+  {
+    id:'dQw4w9WgXcQ',
+    titulo:'LGPD para times de segurança: o que você precisa saber',
+    tag:'Compliance · LGPD',
+    data:'Mai 2025'
+  },
+  {
+    id:'dQw4w9WgXcQ',
+    titulo:'Pentest vs Red Team: diferenças que importam',
+    tag:'Pentest · Red Team',
+    data:'Abr 2025'
+  },
+  {
+    id:'dQw4w9WgXcQ',
+    titulo:'Construindo um SOC com orçamento limitado',
+    tag:'Blue Team · SOC',
+    data:'Mar 2025'
+  },
+  {
+    id:'dQw4w9WgXcQ',
+    titulo:'Gestão de vulnerabilidades: do scan ao patch',
+    tag:'Vulnerabilidades',
+    data:'Fev 2025'
+  },
+  {
+    id:'dQw4w9WgXcQ',
+    titulo:'Threat Intelligence para defesa proativa',
+    tag:'Threat Intel',
+    data:'Jan 2025'
+  },
+]
+
+const grid = document.getElementById('videos-grid')
+videos.forEach((v,i) => {
+  const thumb = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`
+  const url = `https://www.youtube.com/watch?v=${v.id}`
+  grid.innerHTML += `
+  <div class="video-card reveal" style="animation-delay:${i*0.08}s" onclick="window.open('${url}','_blank')">
+    <div class="video-thumb">
+      <img src="${thumb}" alt="${v.titulo}" loading="lazy">
+      <div class="video-play">
+        <div class="play-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#04100c"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="video-info">
+      <div class="video-tag">${v.tag}</div>
+      <div class="video-title">${v.titulo}</div>
+      <div class="video-meta">${v.data}</div>
+    </div>
+  </div>`
+})
+
+// Re-observar novos elementos
+document.querySelectorAll('.reveal:not(.revealed)').forEach(el => observer.observe(el))
+</script>
+</body>
+</html>
